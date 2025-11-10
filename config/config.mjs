@@ -34,7 +34,6 @@ const CONFIG = new Proxy(_CONFIG, {
 
 dotenv.config({path: './.env'});
 
-console.log(process.env)
 // APP 
 CONFIG.APP_PORT = process.env.APP_PORT || 3000;
 

@@ -1,7 +1,9 @@
 CREATE TABLE users (
  id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
- username VARCHAR(255) NOT NULL ,
+ email VARCHAR(255) NOT NULL,
  password VARCHAR(255) NOT NULL,
+ username VARCHAR(255) NOT NULL,
  
+ CONSTRAINT uq_users_email UNIQUE KEY (email),
  CONSTRAINT uq_users_username UNIQUE KEY (username)
 );
