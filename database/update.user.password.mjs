@@ -2,8 +2,8 @@ import { pool } from "../config/database.connection.config.mjs";
 
 
 
-export default async function updateUserPassword(newPassword, id, email) {
-  return await pool.execute(`UPDATE users SET password = ? WHERE id = ? AND email = ?`, [newPassword, id, email]);
+export default async function updateUserPassword(newPassword, id, email, oldPassword) {
+  return await pool.execute(`UPDATE users SET password = ? WHERE id = ? AND email = ? AND password= ? ;`, [newPassword, id, email, oldPassword]);
 }
 
 /*
