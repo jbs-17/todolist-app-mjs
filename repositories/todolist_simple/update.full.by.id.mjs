@@ -9,7 +9,7 @@ end_time = ?,
 is_done = ? 
 WHERE id = ? ;`;
 
-export default async function updateById({
+export default async function updateFullById({
   id,
   title,
   description = "",

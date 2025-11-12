@@ -13,5 +13,5 @@ const _LOGGER = winston.createLogger({
   handleRejections: true,
   handleExceptions: true,
 });
-
-export default _LOGGER;
+const LOGGER = _LOGGER;
+export default LOGGER;

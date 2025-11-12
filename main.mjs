@@ -1,8 +1,9 @@
+// @ts-nocheck
 import process from "node:process";
 import cluster from "node:cluster";
 
 import app from "./app.mjs";
-import CONFIG from "./config/config.mjs";
+import CONFIG from "./configs/config.mjs";
 import LOGGER from "./configs/logger.config.mjs";
 
 if (cluster.isMaster) {

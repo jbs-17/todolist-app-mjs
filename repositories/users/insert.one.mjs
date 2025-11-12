@@ -8,6 +8,17 @@ export default async function insertOne({ email, password, username }) {
 
 /*
 
+
+{
+  fieldCount: 0,
+  affectedRows: 1, 
+  insertId: 42, // Ini yang paling penting
+  info: 'Records: 1  Duplicated: 0  Warnings: 0',
+  serverStatus: 2,
+  warningStatus: 0,
+  changedRows: 0
+}
+
 [
   ResultSetHeader {
     fieldCount: 0,

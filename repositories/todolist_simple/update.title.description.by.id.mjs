@@ -7,7 +7,7 @@ description = ?
 WHERE id = ? ;
 `;
 
-export default async function updateTitleAndDescription({
+export default async function updateTitleAndDescriptionById({
   title,
   description,
   id,

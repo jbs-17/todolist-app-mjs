@@ -29,6 +29,7 @@ dotenv.config({ path: "./.env" });
 
 // APP
 CONFIG.APP_PORT = process.env.APP_PORT || 3000;
+CONFIG.NUMBER_OF_WORKERS = 4;
 
 // LOGGER
 CONFIG.LOGGER_LEVEL = process.env.LOGGER_LEVEL;
