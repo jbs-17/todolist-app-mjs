@@ -4,7 +4,6 @@ const sql = `UPDATE users SET password = ? WHERE id = ? ;`;
 
 export default async function updatePassword({ newPassword, id }) {
   return await pool.execute(sql, [newPassword, id]);
-
 }
 
 /*

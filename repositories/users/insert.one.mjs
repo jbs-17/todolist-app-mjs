@@ -2,13 +2,9 @@ import { pool } from "../../configs/database.connection.config.mjs";
 
 const sql = `INSERT INTO users(email, password, username) VALUES(?, ? , ?)`;
 
-
 export default async function insertOne({ email, password, username }) {
-  return await pool.execute(sql, [email, password, username])
+  return await pool.execute(sql, [email, password, username]);
 }
-
-
-
 
 /*
 

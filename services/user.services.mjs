@@ -1,7 +1,0 @@
-
-
-class UserService {
-  constructor(parameters) {
-    
-  }
-}

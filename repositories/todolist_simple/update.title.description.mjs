@@ -8,9 +8,9 @@ WHERE id = ? ;
 `;
 
 export default async function updateTitleAndDescription({
-    title,
-    description,
-    id
+  title,
+  description,
+  id,
 }) {
-    return await pool.execute(sql, [title, description, id]);
+  return await pool.execute(sql, [title, description, id]);
 }

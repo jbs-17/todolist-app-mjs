@@ -1,13 +1,25 @@
-import CONFIG from './config/config.mjs';
-import './config/database.connection.config.mjs';
-import insertUser from './database/insert.user.mjs';
-import updateUserPassword from './database/update.user.password.mjs';
+import process from "node:process";
+import cluster from "node:cluster";
 
+import app from "./app.mjs";
+import CONFIG from "./config/config.mjs";
+import LOGGER from "./configs/logger.config.mjs";
 
-try {
-  
-  console.log(r);
-} catch (error) {
-  console.error(error)
+if (cluster.isMaster) {
+  LOGGER.info({ message: `master : ${process.pid}` });
+
+  for (let i = 0; i < CONFIG.NUMBER_OF_WORKERS; i++) {
+    cluster.fork();
+  }
+
+  cluster.on("exit", (worker, code, signal) => {
+    LOGGER.error({
+      message: `Worker died: ${worker.process.pid}`,
+      code,
+      worker,
+      signal,
+    });
+  });
+} else {
+  app.listen(CONFIG.APP_PORT);
 }
-

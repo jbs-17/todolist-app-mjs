@@ -12,10 +12,17 @@ WHERE id = ? ;`;
 export default async function updateById({
   id,
   title,
-  description = '',
+  description = "",
   start_time = null,
   end_time = null,
-  is_done = 0
+  is_done = 0,
 }) {
-  return await pool.execute(sql, [title, description, start_time, end_time, is_done, id]);
+  return await pool.execute(sql, [
+    title,
+    description,
+    start_time,
+    end_time,
+    is_done,
+    id,
+  ]);
 }
