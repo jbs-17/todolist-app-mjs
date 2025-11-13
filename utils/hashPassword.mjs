@@ -5,5 +5,5 @@ export default async function hashPassword(password = "") {
     throw new TypeError("password type must be string");
   if (password.length <= 0) throw new Error("password length <= 0");
 
-  return await bcrypt.hash(password, "todolist");
+  return await bcrypt.hash(password, 10);
 }
