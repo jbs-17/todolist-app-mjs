@@ -102,7 +102,8 @@ class UserServices extends EventEmitter {
       if (!user) {
         throw new DataNotExistsError('targeted user not found!', 'id', id);
       }
-
+      
+      // cek authority 
       const isMatch = await comparePassword(oldPassword, user.password);
 
       if (!isMatch) {
@@ -121,10 +122,11 @@ class UserServices extends EventEmitter {
           affectedRows: QueryResult.affectedRows
         };
       } else {
-        throw new DataNotExistsError('targeted user by id to update password not found!', 'id', id);
+        throw new UpadeError('error while updated user password!', 'id', id);
       }
     } catch (error) {
       LOGGER.error({
+       'label': 'service',
         message: "Unhandled DB Error during user deletion:",
         error,
         id
