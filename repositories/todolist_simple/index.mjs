@@ -1,4 +1,5 @@
 import deleteOne from "../users/delete.one.mjs";
+import deleteMany from "./delete.many.mjs";
 import findByid from "./find.by.id.mjs";
 import findTodosByUserId from "./find.todos.by.user.id.mjs";
 import insertOne from "./insert.one.mjs";
@@ -10,6 +11,7 @@ const todoListSimpleRepositories = {
   findByid,
   findTodosByUserId,
   deleteOne,
+  deleteMany,
   insertOne,
   updateFullById,
   updateOneIsDone,
