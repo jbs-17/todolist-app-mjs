@@ -12,9 +12,8 @@ import DataNotExistsError from "../errors/data.not.exists.error.mjs";
 import comparePassword from "../utils/comparePassword.mjs";
 
 class UserServices extends EventEmitter {
-
   /**
-   * 
+   *
    * @param {{ email: string, password : string}}  param0
    * @returns {Promise<{success: true, username : string,email : string,insertId : number }>}
    */
@@ -69,12 +68,32 @@ class UserServices extends EventEmitter {
   }
 
   // * deleteUser
-  async deleteUser({ id }) {
+  async deleteUser({ id , password }) {
     // guard
-    if (isNullish(id))
-      throw new ValidationError("id fields required");
+    if (isNullish(id, password)) throw new ValidationError("id and password fields required", "id:password", null, 400);
 
     try {
+     
+     const [userRows] = await userRepositories.findById(id);
+      const user = userRows[0];
+      if (!user) {
+        throw new DataNotExistsError("targeted user not found!", "id", id);
+      }
+
+      // cek authority
+      const isMatch = await comparePassword(password, user.password);
+
+      if (!isMatch) {
+        // 401 Unauthorized
+        throw new ValidationError(
+          "password wrong.",
+          "password",
+          null,
+          401,
+        );
+      }
+     
+     
       const [QueryResult] = await userRepositories.deleteOne({ id });
 
       if (QueryResult.affectedRows === 1) {
@@ -103,7 +122,9 @@ class UserServices extends EventEmitter {
   async updatePassword({ id, oldPassword, newPassword }) {
     // Guard
     if (isNullish(id, oldPassword, newPassword)) {
-      throw new ValidationError("id, oldPassword, and newPassword fields required");
+      throw new ValidationError(
+        "id, oldPassword, and newPassword fields required",
+      );
     }
 
     isValidPassword(newPassword);
@@ -175,20 +196,30 @@ class UserServices extends EventEmitter {
       const existingUser = userRows[0]; // Ambil data user i 0
 
       if (!existingUser) {
-        throw new ValidationError("Invalid credentials.", "email:password", null, 401);
+        throw new ValidationError(
+          "Invalid credentials.",
+          "email:password",
+          null,
+          401,
+        );
       }
 
       const isMatch = await comparePassword(password, existingUser.password);
 
       if (!isMatch) {
-        throw new ValidationError("Invalid credentials.", "password", null, 401);
+        throw new ValidationError(
+          "Invalid credentials.",
+          "password",
+          null,
+          401,
+        );
       }
 
       delete existingUser.password; // hapus prop password
 
       return {
         success: true,
-        user: existingUser
+        user: existingUser,
       };
     } catch (error) {
       if (error.name !== "ValidationError") {
@@ -196,7 +227,7 @@ class UserServices extends EventEmitter {
           label: "db",
           message: "Unhandled DB Error during authentication:",
           error,
-          email
+          email,
         });
       }
       throw error;
@@ -204,7 +235,6 @@ class UserServices extends EventEmitter {
   }
 
   async updateEmail({ id, newEmail, oldEmail, password }) {
-
     if (isNullish(id, oldEmail, newEmail, password)) {
       throw new ValidationError(
         "id, oldEmail, newEmail, and password are required!",
@@ -213,7 +243,11 @@ class UserServices extends EventEmitter {
     }
 
     if (!isEmail(newEmail)) {
-      throw new ValidationError("Invalid new email format!", "newEmail", newEmail);
+      throw new ValidationError(
+        "Invalid new email format!",
+        "newEmail",
+        newEmail,
+      );
     }
 
     if (oldEmail === newEmail) {
@@ -224,7 +258,6 @@ class UserServices extends EventEmitter {
     }
 
     try {
-  
       const [userRows] = await userRepositories.findById(id);
       const user = userRows[0];
 
@@ -233,25 +266,40 @@ class UserServices extends EventEmitter {
       }
 
       if (user.email !== oldEmail) {
-        throw new ValidationError('Old email does not match our records.', 'oldEmail', null, 401);
+        throw new ValidationError(
+          "Old email does not match our records.",
+          "oldEmail",
+          null,
+          401,
+        );
       }
 
       const isMatch = await comparePassword(password, user.password);
       if (!isMatch) {
-        throw new ValidationError('Password does not match.', 'password', null, 401);
+        throw new ValidationError(
+          "Password does not match.",
+          "password",
+          null,
+          401,
+        );
       }
 
-      const [existingEmailRows] = await userRepositories.findByEmail({ email: newEmail });
+      const [existingEmailRows] = await userRepositories.findByEmail({
+        email: newEmail,
+      });
       if (existingEmailRows.length > 0) {
         throw new DataAlreadyExistsError(
           "Email has been registered with another user",
           "newEmail",
           newEmail,
-          409 // 409 Conflict
+          409, // 409 Conflict
         );
       }
 
-      const [QueryResult] = await userRepositories.updateEmail({ newEmail, id });
+      const [QueryResult] = await userRepositories.updateEmail({
+        newEmail,
+        id,
+      });
 
       if (QueryResult.affectedRows === 1) {
         return {
@@ -266,25 +314,23 @@ class UserServices extends EventEmitter {
         );
       }
     } catch (error) {
-
       // Hanya log error yang tidak terduga (bukan ValidationError/DataNotExists)
-      if (error.name !== 'ValidationError' && error.name !== 'DataNotExistsError' && error.name !== 'DataAlreadyExistsError') {
+      if (
+        error.name !== "ValidationError" &&
+        error.name !== "DataNotExistsError" &&
+        error.name !== "DataAlreadyExistsError" 
+      ) {
         LOGGER.error({
           label: "db",
           message: "Unhandled DB Error during email update:",
           error,
-          id
+          id,
         });
       }
       // Lempar ulang error agar Controller bisa menangani
       throw error;
     }
   }
-
-
-
-
-
 }
 
 export default new UserServices();
