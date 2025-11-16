@@ -5,6 +5,7 @@ import notFoundHandingMiddleware from "./middlewares/notfound.handling.middlewar
 
 const app = express();
 
+
 // * 404 - HANDlER
 // @ts-ignore
 app.use(notFoundHandingMiddleware);

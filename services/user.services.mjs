@@ -67,14 +67,49 @@ class UserServices extends EventEmitter {
     }
   }
 
+
+  // * findById
+  // * findById
+  async findById({ id }) {
+    if (isNullish(id)) {
+      throw new ValidationError("id required!", 'id', id, 400);
+    }
+
+    try {
+      const [[user]] = await userRepositories.findById({ id });
+      
+      if (!user) {
+        throw new DataNotExistsError("User not found.", "id", id, 404);
+      }
+
+      delete user.password;
+
+      return {
+        success: true,
+        user
+      }
+    } catch (error) {
+      // PENTING: Anda mungkin ingin membuat pengecualian log untuk DataNotExistsError
+      // agar error 404 yang diharapkan tidak membanjiri log.
+      if (error.name !== "DataNotExistsError") {
+        LOGGER.error({
+          label: "db",
+          message: "Unhandled DB Error during find user by id:",
+          error,
+        });
+      }
+      throw error;
+    }
+  }
+
   // * deleteUser
-  async deleteUser({ id , password }) {
+  async deleteUser({ id, password }) {
     // guard
     if (isNullish(id, password)) throw new ValidationError("id and password fields required", "id:password", null, 400);
 
     try {
-     
-     const [userRows] = await userRepositories.findById(id);
+
+      const [userRows] = await userRepositories.findById(id);
       const user = userRows[0];
       if (!user) {
         throw new DataNotExistsError("targeted user not found!", "id", id);
@@ -92,8 +127,8 @@ class UserServices extends EventEmitter {
           401,
         );
       }
-     
-     
+
+
       const [QueryResult] = await userRepositories.deleteOne({ id });
 
       if (QueryResult.affectedRows === 1) {
@@ -318,7 +353,7 @@ class UserServices extends EventEmitter {
       if (
         error.name !== "ValidationError" &&
         error.name !== "DataNotExistsError" &&
-        error.name !== "DataAlreadyExistsError" 
+        error.name !== "DataAlreadyExistsError"
       ) {
         LOGGER.error({
           label: "db",

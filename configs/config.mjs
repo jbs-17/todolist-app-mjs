@@ -40,5 +40,6 @@ CONFIG.DB_PORT = Number(process.env.DB_PORT);
 CONFIG.DB_USERNAME = process.env.DB_USERNAME;
 CONFIG.DB_PASSWORD = process.env.DB_PASSWORD;
 CONFIG.DB_DATABASE_NAME = process.env.DB_DATABASE_NAME;
+CONFIG.JWT_SECRET = process.env.JWT_SECRET;
 
 export default Object.freeze(CONFIG);
