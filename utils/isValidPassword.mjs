@@ -1,3 +1,4 @@
+// utils/isValidPassword.mjs
 import { isLength } from "validator";
 import ValidationError from "../errors/validation.error.mjs";
 

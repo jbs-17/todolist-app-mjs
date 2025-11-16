@@ -1,0 +1,71 @@
+|   .env
+|   .gitignore
+|   .prettierignore
+|   .prettierrc
+|   app.mjs
+|   eslint.config.mjs
+|   jsconfig.json
+|   main.mjs
+|   package-lock.json
+|   package.json
+|   README.md
+|
++---configs
+|       config.mjs
+|       database.connection.config.mjs
+|       logger.config.mjs
+|
++---controllers
+|       user.controllers.mjs
+|
++---errors
+|       config.error.mjs
+|       data.already.exists.error.mjs
+|       data.not.exists.error.mjs
+|       update.error.mjs
+|       validation.error.mjs
+|
++---logs
++---middlewares
+|       error.handling.middleware.mjs
+|       notfound.handler.controller.mjs
+|       notfound.handling.middleware.mjs
+|       user.middlewares.mjs
+|
++---repositories
+|   +---todolist_simple
+|   |       delete.many.mjs
+|   |       delete.one.mjs
+|   |       find.by.id.mjs
+|   |       find.todos.by.user.id.mjs
+|   |       index.mjs
+|   |       insert.one.mjs
+|   |       update.full.by.id.mjs
+|   |       update.one.is_done.by.id.mjs
+|   |       update.title.description.by.id.mjs
+|   |
+|   \---users
+|           delete.one.mjs
+|           find.by.email.mjs
+|           find.by.id.mjs
+|           index.mjs
+|           insert.one.mjs
+|           update.email.mjs
+|           update.password.mjs
+|           update.username.mjs
+|
++---routes
+|       routes.mjs
+|       user.routes.mjs
+|
++---services
+|       todolist_simple.services.mjs
+|       user.services.mjs
+|
+\---utils
+        comparePassword.mjs
+        generateLoginToken.mjs
+        hashPassword.mjs
+        isNullish.mjs
+        isValidPassword.mjs
+        randomUsername.mjs

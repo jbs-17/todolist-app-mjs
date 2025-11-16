@@ -1,3 +1,5 @@
+// services/user.services.mjs
+
 import EventEmitter from "node:events";
 import userRepositories from "../repositories/users/index.mjs";
 import { isEmail } from "validator";
@@ -69,7 +71,6 @@ class UserServices extends EventEmitter {
 
 
   // * findById
-  // * findById
   async findById({ id }) {
     if (isNullish(id)) {
       throw new ValidationError("id required!", 'id', id, 400);
@@ -77,7 +78,7 @@ class UserServices extends EventEmitter {
 
     try {
       const [[user]] = await userRepositories.findById({ id });
-      
+
       if (!user) {
         throw new DataNotExistsError("User not found.", "id", id, 404);
       }
@@ -109,8 +110,8 @@ class UserServices extends EventEmitter {
 
     try {
 
-      const [userRows] = await userRepositories.findById(id);
-      const user = userRows[0];
+      const [[user]] = await userRepositories.findById({ id });
+
       if (!user) {
         throw new DataNotExistsError("targeted user not found!", "id", id);
       }
@@ -172,8 +173,8 @@ class UserServices extends EventEmitter {
     }
 
     try {
-      const [userRows] = await userRepositories.findById(id);
-      const user = userRows[0];
+      const [[user]] = await userRepositories.findById({ id });
+
       if (!user) {
         throw new DataNotExistsError("targeted user not found!", "id", id);
       }
@@ -293,8 +294,8 @@ class UserServices extends EventEmitter {
     }
 
     try {
-      const [userRows] = await userRepositories.findById(id);
-      const user = userRows[0];
+      const [[user]] = await userRepositories.findById({ id });
+
 
       if (!user) {
         throw new DataNotExistsError("User not found.", "id", id);

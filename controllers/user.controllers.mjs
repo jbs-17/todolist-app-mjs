@@ -1,4 +1,7 @@
+// controllers/user.controllers.mjs
+
 import userServices from '../services/user.services.mjs';
+import generateLoginToken from '../utils/generateLoginToken.mjs';
 
 
 const userControllers = {
@@ -50,17 +53,44 @@ const userControllers = {
 
   async authenticateUser(req, res) {
     // req.body : email, password
-    const {
-      user
-    } = await userServices.authenticateUser(req.body);
+
+    // 1. Panggil Service untuk verifikasi kredensial
+    const { user } = await userServices.authenticateUser(req.body);
+
+    // 2. Buat Token JWT setelah verifikasi berhasil
+    const token = generateLoginToken(user.id); // Asumsi user object dari service punya properti 'id'
+
+    // 3. Kirim Respons 200 OK
+    res.status(200).json({
+      status: "success",
+      message: "Login successful. Access token provided.",
+      data: {
+        // Tambahkan token JWT ke data respons
+        token,
+        // Sertakan data user dasar (yang sudah dihapus password-nya oleh Service)
+        user
+      }
+    });
+  },
+
+  async getData(req, res) {
+    // Data user sudah tersedia di req.user, disuntikkan oleh verifyToken middleware
+    // Objek req.user ini sudah diverifikasi dan sudah TIDAK memiliki hash password.
+    const user = req.user;
+
+    // Cek jika middleware gagal menyuntikkan (meskipun harusnya sudah dihandle di middleware)
+    if (!user) {
+      // Secara teori, ini tidak akan tercapai jika middleware berfungsi benar
+      return res.status(401).json({ status: "fail", message: "User not authenticated or data missing." });
+    }
 
     res.status(200).json({
       status: "success",
-      message: "User authenticated",
+      message: "User profile retrieved successfully.",
       data: {
         user
       }
-    })
+    });
   }
 
 

@@ -1,19 +1,20 @@
+// middlewares/user.middlewares.mjs
+
 import ValidationError from "../errors/validation.error.mjs";
 import userServices from "../services/user.services.mjs";
 import jwt from 'jsonwebtoken';
 import CONFIG from '../configs/config.mjs';
-import isNullish from "../utils/isNullish.mjs";
 import { isEmail } from "validator";
 import isValidPassword from "../utils/isValidPassword.mjs";
+import { validateRequiredFields } from "../utils/validation.helper.mjs";
 
 
 const userMiddlewares = {
 
     async verifyRegister(req, res, next) {
         const { email, password } = req.body;
-        if (isNullish(email, password)) {
-            return next(new ValidationError("email and passwrd required!", "email:password", null, 400));
-        }
+
+        validateRequiredFields({ email, password }); // Akan throw jika salah satu hilang
 
         if (!isEmail(email)) {
             return next(new ValidationError("invalid email format!", 'email', email, 400));
@@ -24,10 +25,24 @@ const userMiddlewares = {
         next();
     },
 
+    
+    async verifyLogin(req, res, next) {
+        const { email, password } = req.body;
 
-    async verifyLogin(req, res, next){
-        
-    }
+        // Cek keberadaan field
+        validateRequiredFields({ email, password });
+
+        // Cek format email
+        if (!isEmail(email)) {
+            return next(new ValidationError("invalid email format!", 'email', email, 400));
+        }
+
+        // Catatan: Tidak perlu memanggil isValidPassword(password)
+        // karena login hanya membandingkan hash, bukan memvalidasi kekuatannya.
+
+        next();
+    },
+
 
     async verifyToken(req, res, next) {
         const authHeader = req.headers['authorization'];
@@ -66,6 +81,46 @@ const userMiddlewares = {
             // atau error DB 500 lainnya) ke Global Handler
             next(error);
         }
+    },
+
+
+    async verifyUserDeletion(req, res, next) {
+        const { id, password } = req.body;
+
+        validateRequiredFields({ id, password });
+
+        isValidPassword(password); // akan throw error jika invalid
+
+        next();
+    },
+
+
+    async verifyPasswordPatch(req, res, next) {
+        const { id, oldPassword, newPassword } = req.body;
+
+        validateRequiredFields({ id, oldPassword, newPassword });
+
+        isValidPassword(oldPassword);
+        isValidPassword(newPassword);
+
+        next();
+    },
+
+    async verifyEmailPatch(req, res, next) {
+        const { id, newEmail, oldEmail, password } = req.body;
+
+        validateRequiredFields({ id, newEmail, oldEmail, password });
+
+        if (!isEmail(newEmail)) {
+            return next(new ValidationError("Invalid format for newEmail", 'newEmail', null, 400));
+        }
+        if (!isEmail(oldEmail)) {
+            return next(new ValidationError("Invalid format for oldEmail", 'oldEmail', null, 400));
+        }
+
+        isValidPassword(password);
+
+        next();
     }
 };
 

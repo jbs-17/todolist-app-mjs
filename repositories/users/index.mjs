@@ -1,3 +1,5 @@
+// repositories/users/index.mjs
+
 import deleteOne from "./delete.one.mjs";
 import { findByEmail } from "./find.by.email.mjs";
 import { findById } from "./find.by.id.mjs";
