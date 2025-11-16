@@ -9,7 +9,8 @@ export default async function errorHandingMiddleware(
 ) {
   LOGGER.error({ err, message: "Error" });
 
-  res.status(500).json({
+  res.statusCode = 500;
+  res.json({
     message: "INTERNAL SERVER ERROR",
     code: 500,
     data: [],

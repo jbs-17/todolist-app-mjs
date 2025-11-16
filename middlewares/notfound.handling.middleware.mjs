@@ -1,5 +1,4 @@
 import express from "express";
-
 import LOGGER from "../configs/logger.config.mjs";
 
 export default async function notFoundHandingMiddleware(
@@ -14,7 +13,8 @@ export default async function notFoundHandingMiddleware(
     path: req.path,
   });
 
-  return res.status(404).json({
+  res.statusCode = 404;
+  return res.json({
     code: 404,
     message: "404 - NOT FOUND!",
     data: [],

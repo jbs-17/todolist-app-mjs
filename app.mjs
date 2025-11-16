@@ -7,10 +7,9 @@ const app = express();
 
 
 // * 404 - HANDlER
-// @ts-ignore
-app.use(notFoundHandingMiddleware);
+app.use((err, req, res, next) => notFoundHandingMiddleware(err, req, res, next));
 
 // * 500 - HANDLER
-app.use(errorHandingMiddleware);
+app.use((err, req, res, next) => errorHandingMiddleware(err, req, res, next));
 
 export default app;
