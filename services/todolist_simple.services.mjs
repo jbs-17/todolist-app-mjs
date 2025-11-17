@@ -1,7 +1,9 @@
 // services/todolist_simple.services.mjs
 
 import EventEmitter from "events";
-import { isLength } from "validator";
+
+import pkg from 'validator';
+const { isLength } = pkg;
 import todoListSimpleRepositories from "../repositories/todolist_simple/index.mjs";
 import ValidationError from "../errors/validation.error.mjs";
 import isNullish from "../utils/isNullish.mjs";

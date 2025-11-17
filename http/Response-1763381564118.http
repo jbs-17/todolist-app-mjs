@@ -1,0 +1,9 @@
+HTTP/1.1 201 Created
+X-Powered-By: Express
+Content-Type: application/json; charset=utf-8
+Content-Length: 131
+ETag: W/"83-TRlci/So6Qn69x35i2cmx4P/HOc"
+Date: Mon, 17 Nov 2025 12:11:42 GMT
+Connection: close
+
+{"status":"success","message":"User registered successfully.","data":{"id":7,"username":"u_tdl:6e0819f7","email":"test@email.com"}}

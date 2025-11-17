@@ -2,7 +2,8 @@
 
 import EventEmitter from "node:events";
 import userRepositories from "../repositories/users/index.mjs";
-import { isEmail } from "validator";
+import pkg from 'validator';
+const { isEmail } = pkg;
 import ValidationError from "../errors/validation.error.mjs";
 import isNullish from "../utils/isNullish.mjs";
 import isValidPassword from "../utils/isValidPassword.mjs";

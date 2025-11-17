@@ -4,13 +4,15 @@ import ValidationError from "../errors/validation.error.mjs";
 import userServices from "../services/user.services.mjs";
 import jwt from "jsonwebtoken";
 import CONFIG from "../configs/config.mjs";
-import { isEmail } from "validator";
+
+import pkg from 'validator';
+const { isEmail } = pkg;
 import isValidPassword from "../utils/isValidPassword.mjs";
 import { validateRequiredFields } from "../utils/validation.helper.mjs";
 
 const userMiddlewares = {
   async verifyRegister(req, res, next) {
-    const { email, password } = req.body;
+    const { email, password } = req.body || {};
 
     validateRequiredFields({ email, password }); // Akan throw jika salah satu hilang
 
@@ -26,7 +28,7 @@ const userMiddlewares = {
   },
 
   async verifyLogin(req, res, next) {
-    const { email, password } = req.body;
+    const { email, password } = req.body || {};
 
     // Cek keberadaan field
     validateRequiredFields({ email, password });
@@ -100,7 +102,7 @@ const userMiddlewares = {
   },
 
   async verifyUserDeletion(req, res, next) {
-    const { id, password } = req.body;
+    const { id, password } = req.body || {};
 
     validateRequiredFields({ id, password });
 
@@ -110,7 +112,7 @@ const userMiddlewares = {
   },
 
   async verifyPasswordPatch(req, res, next) {
-    const { id, oldPassword, newPassword } = req.body;
+    const { id, oldPassword, newPassword } = req.body || {};
 
     validateRequiredFields({ id, oldPassword, newPassword });
 
@@ -121,7 +123,7 @@ const userMiddlewares = {
   },
 
   async verifyEmailPatch(req, res, next) {
-    const { id, newEmail, oldEmail, password } = req.body;
+    const { id, newEmail, oldEmail, password } = req.body  || {};
 
     validateRequiredFields({ id, newEmail, oldEmail, password });
 

@@ -1,5 +1,6 @@
 // utils/isValidPassword.mjs
-import { isLength } from "validator";
+import pkg from 'validator';
+const { isLength } = pkg;
 import ValidationError from "../errors/validation.error.mjs";
 
 export default function isValidPassword(password) {

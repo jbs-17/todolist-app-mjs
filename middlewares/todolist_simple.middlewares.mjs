@@ -1,4 +1,6 @@
-import { isLength } from "validator";
+
+import pkg from 'validator';
+const { isLength } = pkg;
 import { validateRequiredFields } from "../utils/validation.helper.mjs";
 import ValidationError from "../errors/validation.error.mjs";
 

@@ -22,5 +22,16 @@ if (cluster.isMaster) {
     });
   });
 } else {
-  app.listen(CONFIG.APP_PORT);
+  app.listen(CONFIG.APP_PORT, (error)=>{
+    if(error){
+      LOGGER.error({
+        ...error,
+        error
+      });
+      process.exit(1);
+    };
+    LOGGER.info({
+      message: `worker app pid : ${process.pid} listeting...`
+    })
+  });
 }

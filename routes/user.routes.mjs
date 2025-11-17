@@ -1,12 +1,15 @@
 import userControllers from "../controllers/user.controllers.mjs";
 import express from "express";
 import userMiddlewares from "../middlewares/user.middlewares.mjs";
+import { JSONBodyPreprocessorMiddleware } from "../middlewares/body.json.preprocessor.middlweware.mjs";
 
 const prefix = "/api/v1/user";
 const router = express.Router({
   strict: true,
   caseSensitive: true,
 });
+
+router.use(JSONBodyPreprocessorMiddleware);
 
 router.post(
   "/register",
