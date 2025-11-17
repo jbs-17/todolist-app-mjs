@@ -1,3 +1,5 @@
+// services/todolist_simple.services.mjs
+
 import EventEmitter from "events";
 import { isLength } from "validator";
 import todoListSimpleRepositories from "../repositories/todolist_simple/index.mjs";
@@ -7,7 +9,7 @@ import LOGGER from "../configs/logger.config.mjs";
 import DataNotExistsError from "../errors/data.not.exists.error.mjs";
 
 class TodoListSimpleServices extends EventEmitter {
-  async insertOne({ user_id, title, description }) {
+  async insertOne({ user_id, title, description, is_done, start_time, end_time }) {
     if (isNullish(user_id, title)) {
       throw new ValidationError("user_id and title required!");
     }
@@ -25,8 +27,7 @@ class TodoListSimpleServices extends EventEmitter {
       // TIDAK PERLU CEK FIND BY ID karena user_id berasal dari token/sesi
       const [QueryResult] = await todoListSimpleRepositories.insertOne({
         user_id,
-        title,
-        description,
+        title, description, is_done, start_time, end_time
       });
 
       return {
@@ -267,6 +268,7 @@ class TodoListSimpleServices extends EventEmitter {
       throw error;
     }
   }
+
 }
 
 export default new TodoListSimpleServices();
