@@ -1,14 +1,15 @@
 // controllers/user.controllers.mjs
 
-import userServices from '../services/user.services.mjs';
-import generateLoginToken from '../utils/generateLoginToken.mjs';
-
+import userServices from "../services/user.services.mjs";
+import generateLoginToken from "../utils/generateLoginToken.mjs";
 
 const userControllers = {
   async newUser(req, res) {
-    // req body sudah di validasi lewat middleware, ada middleware khususnya untuk user routes  
+    // req body sudah di validasi lewat middleware, ada middleware khususnya untuk user routes
     // req.body harus sudah {email : string, password : string } kareana validasi middleware
-    const { insertId, username, email } = await userServices.addNewUser(req.body);
+    const { insertId, username, email } = await userServices.addNewUser(
+      req.body,
+    );
 
     res.status(201).json({
       status: "success",
@@ -16,8 +17,8 @@ const userControllers = {
       data: {
         id: insertId,
         username,
-        email
-      }
+        email,
+      },
     });
     // error akan ditangkap global
   },
@@ -29,7 +30,6 @@ const userControllers = {
 
     // 204 No Content: Sukses, tapi tidak ada body respons
     res.status(204).end();
-
   },
 
   async updatePassword(req, res) {
@@ -38,17 +38,13 @@ const userControllers = {
     await userServices.updatePassword(req.body);
 
     res.status(204).end();
-
-
   },
 
   async updateEmail(req, res) {
-
     // req.body sudah {id, newEmail, oldEmail, password}
     await userServices.updateEmail(req.body);
 
     res.status(204).end();
-
   },
 
   async authenticateUser(req, res) {
@@ -68,8 +64,8 @@ const userControllers = {
         // Tambahkan token JWT ke data respons
         token,
         // Sertakan data user dasar (yang sudah dihapus password-nya oleh Service)
-        user
-      }
+        user,
+      },
     });
   },
 
@@ -81,18 +77,21 @@ const userControllers = {
     // Cek jika middleware gagal menyuntikkan (meskipun harusnya sudah dihandle di middleware)
     if (!user) {
       // Secara teori, ini tidak akan tercapai jika middleware berfungsi benar
-      return res.status(401).json({ status: "fail", message: "User not authenticated or data missing." });
+      return res
+        .status(401)
+        .json({
+          status: "fail",
+          message: "User not authenticated or data missing.",
+        });
     }
 
     res.status(200).json({
       status: "success",
       message: "User profile retrieved successfully.",
       data: {
-        user
-      }
+        user,
+      },
     });
-  }
-
-
-}
+  },
+};
 export default userControllers;

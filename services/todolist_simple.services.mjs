@@ -9,7 +9,14 @@ import LOGGER from "../configs/logger.config.mjs";
 import DataNotExistsError from "../errors/data.not.exists.error.mjs";
 
 class TodoListSimpleServices extends EventEmitter {
-  async insertOne({ user_id, title, description, is_done, start_time, end_time }) {
+  async insertOne({
+    user_id,
+    title,
+    description,
+    is_done,
+    start_time,
+    end_time,
+  }) {
     if (isNullish(user_id, title)) {
       throw new ValidationError("user_id and title required!");
     }
@@ -27,7 +34,11 @@ class TodoListSimpleServices extends EventEmitter {
       // TIDAK PERLU CEK FIND BY ID karena user_id berasal dari token/sesi
       const [QueryResult] = await todoListSimpleRepositories.insertOne({
         user_id,
-        title, description, is_done, start_time, end_time
+        title,
+        description,
+        is_done,
+        start_time,
+        end_time,
       });
 
       return {
@@ -44,13 +55,21 @@ class TodoListSimpleServices extends EventEmitter {
     }
   }
 
-  async deleteOne({ id }) {
-    if (isNullish(id)) {
-      throw new ValidationError("id required!", "id", id, 400);
+  async deleteOne({ user_id, id }) {
+    if (isNullish(user_id, id)) {
+      throw new ValidationError(
+        "user_id and id required!",
+        "user_id:id",
+        null,
+        400,
+      );
     }
 
     try {
-      const [QueryResult] = await todoListSimpleRepositories.deleteOne({ id });
+      const [QueryResult] = await todoListSimpleRepositories.deleteOne({
+        user_id,
+        id,
+      });
 
       if (QueryResult.affectedRows === 1) {
         return {
@@ -75,26 +94,28 @@ class TodoListSimpleServices extends EventEmitter {
     }
   }
 
-  async deleteMany({ ids }) {
+  async deleteMany({ user_id, ids }) {
+    // --- VALIDASI DI LUAR TRY ---
+
+    if (isNullish(user_id, ids)) {
+      throw new ValidationError(
+        "user_id and ids required!",
+        "user_is:ids",
+        null,
+        400,
+      );
+    }
+    if (!Array.isArray(ids)) {
+      throw new ValidationError("ids must be an array!", "ids", ids, 400);
+    }
+    if (ids.length < 1) {
+      throw new ValidationError("ids array cannot be empty!", "ids", ids, 400);
+    }
+    // --- AKHIR VALIDASI ---
+
     try {
-      if (isNullish(ids)) {
-        throw new ValidationError("ids required!", "ids", ids, 400);
-      }
-
-      if (!Array.isArray(ids)) {
-        throw new ValidationError("ids must be an array!", "ids", ids, 400);
-      }
-
-      if (ids.length < 1) {
-        throw new ValidationError(
-          "ids array cannot be empty!",
-          "ids",
-          ids,
-          400,
-        );
-      }
-
       const [QueryResult] = await todoListSimpleRepositories.deleteMany({
+        user_id,
         ids,
       });
 
@@ -122,13 +143,19 @@ class TodoListSimpleServices extends EventEmitter {
     }
   }
 
-  async updateDone({ id }) {
-    if (isNullish(id)) {
-      throw new ValidationError("id required!", "id", id, 400);
+  async updateDone({ user_id, id }) {
+    if (isNullish(user_id, id)) {
+      throw new ValidationError(
+        "user_id and id required!",
+        "user_id:id",
+        null,
+        400,
+      );
     }
 
     try {
       const [QueryResult] = await todoListSimpleRepositories.updateOneIsDone({
+        user_id,
         id,
       });
 
@@ -157,6 +184,7 @@ class TodoListSimpleServices extends EventEmitter {
   }
 
   async updateFullById({
+    user_id,
     id,
     title,
     description = "",
@@ -164,10 +192,10 @@ class TodoListSimpleServices extends EventEmitter {
     end_time = null,
     is_done = 0,
   }) {
-    if (isNullish(id, title)) {
+    if (isNullish(user_id, id, title)) {
       throw new ValidationError(
-        "id and title required!",
-        "id:title",
+        "user_is, id, and title required!",
+        "user_id:id:title",
         null,
         400,
       );
@@ -184,6 +212,7 @@ class TodoListSimpleServices extends EventEmitter {
 
     try {
       const [QueryResult] = await todoListSimpleRepositories.updateFullById({
+        user_id,
         id,
         title,
         description,
@@ -215,13 +244,21 @@ class TodoListSimpleServices extends EventEmitter {
     }
   }
 
-  async findById({ id }) {
-    if (isNullish(id)) {
-      throw new ValidationError("id required!", "id", id, 400);
+  async findById({ user_id, id }) {
+    if (isNullish(user_id, id)) {
+      throw new ValidationError(
+        "user_id and id required!",
+        "user_id:id",
+        null,
+        400,
+      );
     }
 
     try {
-      const [QueryResult] = await todoListSimpleRepositories.findById({ id });
+      const [QueryResult] = await todoListSimpleRepositories.findById({
+        user_id,
+        id,
+      });
       const todo = QueryResult[0];
       if (todo) {
         return { success: true, todo };
@@ -268,7 +305,6 @@ class TodoListSimpleServices extends EventEmitter {
       throw error;
     }
   }
-
 }
 
 export default new TodoListSimpleServices();

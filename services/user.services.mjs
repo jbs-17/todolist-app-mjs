@@ -69,11 +69,10 @@ class UserServices extends EventEmitter {
     }
   }
 
-
   // * findById
   async findById({ id }) {
     if (isNullish(id)) {
-      throw new ValidationError("id required!", 'id', id, 400);
+      throw new ValidationError("id required!", "id", id, 400);
     }
 
     try {
@@ -87,8 +86,8 @@ class UserServices extends EventEmitter {
 
       return {
         success: true,
-        user
-      }
+        user,
+      };
     } catch (error) {
       // PENTING: Anda mungkin ingin membuat pengecualian log untuk DataNotExistsError
       // agar error 404 yang diharapkan tidak membanjiri log.
@@ -106,10 +105,15 @@ class UserServices extends EventEmitter {
   // * deleteUser
   async deleteUser({ id, password }) {
     // guard
-    if (isNullish(id, password)) throw new ValidationError("id and password fields required", "id:password", null, 400);
+    if (isNullish(id, password))
+      throw new ValidationError(
+        "id and password fields required",
+        "id:password",
+        null,
+        400,
+      );
 
     try {
-
       const [[user]] = await userRepositories.findById({ id });
 
       if (!user) {
@@ -121,14 +125,8 @@ class UserServices extends EventEmitter {
 
       if (!isMatch) {
         // 401 Unauthorized
-        throw new ValidationError(
-          "password wrong.",
-          "password",
-          null,
-          401,
-        );
+        throw new ValidationError("password wrong.", "password", null, 401);
       }
-
 
       const [QueryResult] = await userRepositories.deleteOne({ id });
 
@@ -295,7 +293,6 @@ class UserServices extends EventEmitter {
 
     try {
       const [[user]] = await userRepositories.findById({ id });
-
 
       if (!user) {
         throw new DataNotExistsError("User not found.", "id", id);

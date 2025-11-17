@@ -8,5 +8,3 @@ const isNullish = (...values) => {
 };
 
 export default isNullish;
-
-

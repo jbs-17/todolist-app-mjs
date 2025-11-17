@@ -7,7 +7,7 @@ description = ?,
 start_time = ?, 
 end_time = ?,
 is_done = ? 
-WHERE id = ? ;`;
+WHERE id = ? AND user_id = ? ;`;
 
 export default async function updateFullById({
   id,
@@ -16,6 +16,7 @@ export default async function updateFullById({
   start_time = null,
   end_time = null,
   is_done = 0,
+  user_id,
 }) {
   return await pool.execute(sql, [
     title,
@@ -24,5 +25,6 @@ export default async function updateFullById({
     end_time,
     is_done,
     id,
+    user_id,
   ]);
 }

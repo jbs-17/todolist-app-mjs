@@ -12,11 +12,11 @@ function sql(ids = []) {
   if (placeholders.length === 0)
     return `DELETE FROM todolist_simple WHERE id IN (NULL)`;
 
-  const sql = `DELETE FROM todolist_simple WHERE id IN (${placeholders});`;
+  const sql = `DELETE FROM todolist_simple WHERE user_id = ? AND id IN (${placeholders});`;
   return sql;
 }
 
-export default async function deleteMany({ ids = [] }) {
+export default async function deleteMany({ user_id, ids = [] }) {
   // Tetap menggunakan fungsi sql() yang sudah direvisi
-  return await pool.execute(sql(ids), ids);
+  return await pool.execute(sql(ids), [user_id, ...ids]);
 }
