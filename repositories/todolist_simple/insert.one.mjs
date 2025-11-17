@@ -8,10 +8,10 @@ VALUES ( ? , ? , ?, ?, ?, ? ) ;`; // <-- PERBAIKAN: Hanya 6 placeholder
 export default async function insertOne({
   user_id,
   title,
-  description,
-  is_done,
-  start_time,
-  end_time,
+  description = "",
+  is_done = 0,
+  start_time = null,
+  end_time = null,
 }) {
   return await pool.execute(sql, [
     user_id,

@@ -3,7 +3,7 @@
 import EventEmitter from "events";
 
 import pkg from 'validator';
-const { isLength } = pkg;
+const { isLength, isISO8601 } = pkg;
 import todoListSimpleRepositories from "../repositories/todolist_simple/index.mjs";
 import ValidationError from "../errors/validation.error.mjs";
 import isNullish from "../utils/isNullish.mjs";
@@ -196,11 +196,38 @@ class TodoListSimpleServices extends EventEmitter {
   }) {
     if (isNullish(user_id, id, title)) {
       throw new ValidationError(
-        "user_is, id, and title required!",
+        "user_id, id, and title required!",
         "user_id:id:title",
         null,
         400,
       );
+    }
+
+	// 1. Validasi start_time
+    if (start_time !== null) {
+        // Jika nilai dikirim dan BUKAN null, harus berupa string dan formatnya harus valid
+        if (typeof start_time !== 'string' || !isISO8601(start_time)) {
+             // 🎯 Melempar ValidationError dengan pesan yang jelas (400)
+             throw new ValidationError(
+                 "start_time harus berupa string format tanggal/waktu ISO 8601 yang valid (Contoh: '2025-12-31T10:00:00.000Z').", 
+                 "start_time", 
+                 start_time, 
+                 400
+             );
+        }
+    }
+
+    // 2. Validasi end_time
+    if (end_time !== null) {
+        if (typeof end_time !== 'string' || !isISO8601(end_time)) {
+             // 🎯 Melempar ValidationError dengan pesan yang jelas (400)
+             throw new ValidationError(
+                 "end_time harus berupa string format tanggal/waktu ISO 8601 yang valid (Contoh: '2025-12-31T10:00:00.000Z').", 
+                 "end_time", 
+                 end_time, 
+                 400
+             );
+        }
     }
 
     if (is_done !== 1 && is_done !== 0) {

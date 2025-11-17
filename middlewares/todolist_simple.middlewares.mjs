@@ -38,6 +38,7 @@ const todoListSimpleMiddlewares = {
     validateRequiredFields({ id, title });
     next();
   },
+
   async validateIdFromParams(req, res, next) {
     // Ambil id dari parameter URL
     const { id } = req.params;

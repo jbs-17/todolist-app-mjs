@@ -69,7 +69,7 @@ const todoListSimpleControllers = {
   async getOne(req, res) {
     const { todo } = await todoListSimpleServices.findById({
       user_id: req.user.id,
-      id: req.param.id,
+      id: req.params.id,
     });
     return res.status(200).json({
       status: "success",
@@ -100,7 +100,7 @@ const todoListSimpleControllers = {
   },
 
   async updateFull(req, res) {
-    const { user_id } = req.user;
+    const { id : user_id } = req.user;
     // yang wajib hanya id dan title lainya boleh null
     const { id, title, description, end_time, is_done, start_time } = req.body;
     await todoListSimpleServices.updateFullById({

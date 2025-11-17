@@ -4,12 +4,15 @@ import express from "express";
 import userMiddlewares from "../middlewares/user.middlewares.mjs";
 import todoListSImpleMiddlewares from "../middlewares/todolist_simple.middlewares.mjs";
 import todoListSimpleControllers from "../controllers/todolist_simple.controllers.mjs";
+import { JSONBodyPreprocessorMiddleware } from "../middlewares/body.json.preprocessor.middlweware.mjs";
 
 const prefix = "/api/v1/todolist_simple";
 const router = express.Router({
   strict: true,
   caseSensitive: true,
 });
+
+router.use(JSONBodyPreprocessorMiddleware);
 
 router.use(userMiddlewares.verifyToken); // pastikan semua ada req.user
 
@@ -31,7 +34,7 @@ router.delete(
   todoListSimpleControllers.deleteMany,
 );
 
-router.get("/", todoListSimpleControllers.getAll); // GET (bukan POST)
+router.get("/all", todoListSimpleControllers.getAll); // GET (bukan POST)
 
 router.get(
   "/:id",
