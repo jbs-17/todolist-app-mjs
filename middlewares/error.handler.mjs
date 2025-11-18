@@ -11,17 +11,15 @@ const errorHandler = (err, req, res, next) => {
   // 1. Definisikan respons default untuk error yang tidak terduga
   let statusCode = err.statusCode || 500; // 500 Internal Server Error
   let status = "error";
-  let message = "Internal Server Error";
+  let message = err.message ?? "Internal Server Error";
   let fields = null;
 
   // 2. Log error yang tidak terduga (hanya 500)
-  if (statusCode === 500) {
     LOGGER.error({
       label: "global-handler",
-      message: "Unhandled 500 Error:",
+      message: err.message ?? "Unhandled 500 Error:",
       error: err,
     });
-  }
 
   // 3. Tangani Custom Errors
   if (err instanceof ValidationError || err instanceof DataAlreadyExistsError) {
